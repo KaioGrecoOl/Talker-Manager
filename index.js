@@ -17,7 +17,7 @@ app.get('/talker', helper.talkerList);
 
 app.get('/talker/:id', helper.talkersId);
 
-app.post('/login', helper.login);
+app.post('/login', helper.validEmail, helper.validPassword, helper.tokenGenerator);
 
 app.listen(PORT, () => {
   console.log('Online');
