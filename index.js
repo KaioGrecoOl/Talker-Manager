@@ -6,7 +6,7 @@ const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
-const PORT = '3001';
+const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -16,6 +16,8 @@ app.get('/', (_request, response) => {
 app.get('/talker', helper.talkerList);
 
 app.get('/talker/:id', helper.talkersId);
+
+app.post('/login', helper.login);
 
 app.listen(PORT, () => {
   console.log('Online');

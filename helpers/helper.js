@@ -1,4 +1,5 @@
 const fs = require('fs/promises');
+const crypto = require('crypto');
 
 const talkerList = async (req, res) => {
   const getTalkers = await fs.readFile('./talker.json');
@@ -15,4 +16,10 @@ const talkersId = async (req, res) => {
   res.status(200).json(talkerId);
 };
 
-module.exports = { talkerList, talkersId };
+// consegui desenvolver a função abaixo apos leitura do conteúdo https://stackoverflow.com/questions/55104802/nodejs-crypto-randombytes-to-string-hex-doubling-size
+const login = async (req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
+  res.status(200).json({ token });
+};
+
+module.exports = { talkerList, talkersId, login };
