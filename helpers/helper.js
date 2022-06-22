@@ -1,27 +1,32 @@
 const fs = require('fs/promises');
 const crypto = require('crypto');
 
+// Req.1- Crie o end point get/talker que retorne o array com os palestrantes
+
 const talkerList = async (req, res) => {
   const getTalkers = await fs.readFile('./talker.json');
   const data = JSON.parse(getTalkers);
   return res.status(200).json(data);
 };
 
+// Req.2- Crie o end point get/talker:id, que retorna um palestrante
 const talkersId = async (req, res) => {
   const { id } = req.params;
   const talker = await fs.readFile('./talker.json');
   const data = JSON.parse(talker);
   const talkerId = data.find((dataId) => dataId.id === Number(id));
   if (!talkerId) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-  res.status(200).json(talkerId);
+  return res.status(200).json(talkerId);
 };
 
+// Req.3- Crie o end point post/login - deve ser gerado o token da pessoa
 // consegui desenvolver a função abaixo apos leitura do conteúdo https://stackoverflow.com/questions/55104802/nodejs-crypto-randombytes-to-string-hex-doubling-size
 const tokenGenerator = async (req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
-  res.status(200).json({ token });
+  return res.status(200).json({ token });
 };
 
+// Req.4- adiciona validações para endpoint login
 const emailRequired = { message: 'O campo "email" é obrigatório' };
 const emailFormat = { message: 'O "email" deve ter o formato "email@email.com"' };
 const passwordRequired = { message: 'O campo "password" é obrigatório' };
@@ -43,13 +48,15 @@ const validPassword = (req, res, next) => {
   const { password } = req.body;
   const magicNumber = 6;
   if (!password) {
-    res.status(400).json(passwordRequired);
+    return res.status(400).json(passwordRequired);
   }
   if (password.length < magicNumber) {
-    res.status(400).json(passwordLength);
+    return res.status(400).json(passwordLength);
   }
   next();
 };
+
+// Req.5- Cria validações do end point post/talker
 
 const validToken = (req, res, next) => {
   const { authorization } = req.headers;
@@ -98,7 +105,7 @@ const validateInfoTalk = (req, res, next) => {
 // consegui desenvolver a função apos ler o conteúdo https://stackoverflow.com/questions/5465375/javascript-date-regex-dd-mm-yyyy
 const validateDate = (req, res, next) => {
   const { talk: { watchedAt } } = req.body;
-  const validDate = /[0-9]{2}[/][0-9]{2}[/][0-9]{4}$/;
+  const validDate = /^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[/]\d{4}$/;
   if (!watchedAt.match(validDate)) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
