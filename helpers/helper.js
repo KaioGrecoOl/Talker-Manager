@@ -2,9 +2,9 @@ const fs = require('fs/promises');
 const crypto = require('crypto');
 
 // Req.1- Crie o end point get/talker que retorne o array com os palestrantes
-
+const pathFila = './talker.json';
 const talkerList = async (req, res) => {
-  const getTalkers = await fs.readFile('./talker.json');
+  const getTalkers = await fs.readFile(pathFila);
   const data = JSON.parse(getTalkers);
   return res.status(200).json(data);
 };
@@ -12,7 +12,7 @@ const talkerList = async (req, res) => {
 // Req.2- Crie o end point get/talker:id, que retorna um palestrante
 const talkersId = async (req, res) => {
   const { id } = req.params;
-  const talker = await fs.readFile('./talker.json');
+  const talker = await fs.readFile(pathFila);
   const data = JSON.parse(talker);
   const talkerId = data.find((dataId) => dataId.id === Number(id));
   if (!talkerId) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
@@ -114,22 +114,34 @@ const validateDate = (req, res, next) => {
 
 const validateRate = (req, res, next) => {
   const { talk: { rate } } = req.body;
+  if (rate > 5 || rate < 1) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
   if (!rate) {
     return res.status(400).json({ message: 'O campo "rate" é obrigatório' });
-  }
-  if (rate < 1 || rate > 5) {
-    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
 };
 
 const newTalkerInfo = async (req, res) => {
   const { name, age, talk } = req.body;
-  const getTalker = JSON.parse(await fs.readFile('./talker.json'));
+  const getTalker = JSON.parse(await fs.readFile(pathFila));
   const talkerInfo = { id: getTalker.length + 1, name, age, talk };
   getTalker.push(talkerInfo);
-  await fs.writeFile('./talker.json', JSON.stringify(getTalker));
+  await fs.writeFile(pathFila, JSON.stringify(getTalker));
   return res.status(201).json(talkerInfo);
+};
+
+// Req.6- Cria end point put/talker:id, para que seja possível editar as informações
+const editTalker = async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const talkersList = JSON.parse(await fs.readFile(pathFila));
+    const talkerIndex = talkersList.findIndex((data) => Number(data.id) === Number(id));
+    const newTalker = { id: Number(id), name, age, talk };
+    talkersList[talkerIndex] = newTalker;
+    await fs.writeFile(pathFila, JSON.stringify(talkersList));
+    return res.status(200).json(newTalker);
 };
 
 module.exports = { talkerList,
@@ -143,4 +155,6 @@ module.exports = { talkerList,
   validateInfoTalk,
   validateDate,
   validateRate,
-  newTalkerInfo };
+  newTalkerInfo,
+  editTalker,
+ };

@@ -24,6 +24,11 @@ helper.validateName,
 helper.validateAge, 
 helper.validateInfoTalk, helper.validateDate, helper.validateRate, helper.newTalkerInfo);
 
+app.put('/talker/:id', helper.validToken, 
+helper.validateName, 
+helper.validateAge, 
+helper.validateInfoTalk, helper.validateDate, helper.validateRate, helper.editTalker);
+
 app.listen(PORT, () => {
   console.log('Online');
 });
