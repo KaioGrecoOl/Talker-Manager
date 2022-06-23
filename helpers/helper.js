@@ -144,6 +144,17 @@ const editTalker = async (req, res) => {
     return res.status(200).json(newTalker);
 };
 
+// Req.7- Cria end point delete/talker:id
+
+const deleteTalker = async (req, res) => {
+  const { id } = req.params;
+  const talkersList = JSON.parse(await fs.readFile(pathFila));
+  const talkerIndex = talkersList.findIndex((data) => Number(data.id) === Number(id));
+  talkersList.splice(talkerIndex, 1);
+  await fs.writeFile(pathFila, JSON.stringify(talkersList));
+  return res.status(204).end();
+};
+
 module.exports = { talkerList,
   talkersId, 
   tokenGenerator, 
@@ -157,4 +168,5 @@ module.exports = { talkerList,
   validateRate,
   newTalkerInfo,
   editTalker,
+  deleteTalker,
  };

@@ -29,6 +29,8 @@ helper.validateName,
 helper.validateAge, 
 helper.validateInfoTalk, helper.validateDate, helper.validateRate, helper.editTalker);
 
+app.delete('/talker/:id', helper.validToken, helper.deleteTalker);
+
 app.listen(PORT, () => {
   console.log('Online');
 });
