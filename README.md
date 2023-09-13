@@ -4,11 +4,11 @@
 
 O Projeto foi realizado como último exercício do Bloco 22, onde tive oportunidade de colocar em prática os conhecimentos adquridos no respecrtivo bloco sobre Node.js com Express na construção de APIs REST.
 
-The Project was developed at the end of Unit 21, where I had to put into practice the knowledge acquired in the respective block about Node.js with Express in the construction of REST APIs.
+The Project was developed at the end of Unit 22, where I had to put into practice the knowledge acquired in the respective block about Node.js with Express in the construction of REST APIs.
 
 # Objetivo / Objective
 
-Montar queries para encontrar as informações esperadas pelos desafios e normalizar a estrutura passada.
+Construir uma aplicação de palestrantes (talkers), na qual será possível cadastrar, listar, pesquisar, editar e excluir palestrantes.
 
 Build a speaker application, in which it will be possible to register, list, search, edit and delete speakers.
 
